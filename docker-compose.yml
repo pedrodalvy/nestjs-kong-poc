@@ -1,0 +1,30 @@
+version: '3.8'
+
+networks:
+  nestjs-kong-poc:
+    name: 'nestjs-kong-poc'
+
+services:
+  app_dev:
+    container_name: app_dev
+    working_dir: /app
+    command: sh -c "npm run start:dev"
+    build:
+      context: .
+      args:
+        BUILD_STAGE: development
+    ports:
+      - '${PORT:-3000}:3000'
+    volumes:
+      - .:/app
+    networks:
+      - nestjs-kong-poc
+
+  app_prod:
+    container_name: app_prod
+    build:
+      context: .
+    ports:
+      - '${PORT:-3000}:3000'
+    networks:
+      - nestjs-kong-poc
